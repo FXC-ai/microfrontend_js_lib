@@ -1,0 +1,20 @@
+
+@use 'd3CalendarDensity/CalendarDensity.scss';
+
+$primary-color: #000000;
+$font-size: 16px;
+
+body {
+  font-family: Arial, sans-serif;
+  font-size: $font-size;
+  color: $primary-color;
+}
+
+.chart-container {
+  border: 2px solid $primary-color;
+  border-radius: 8px;
+  
+  h2 {
+    margin-top: 0;
+  }
+}

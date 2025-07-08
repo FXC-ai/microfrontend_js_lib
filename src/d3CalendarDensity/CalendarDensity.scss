@@ -1,0 +1,131 @@
+// === VARIABLES ===
+:root {
+  --calendar-bg-light: #f9fafb;
+  --calendar-bg-hover: #e0e0e0;
+  --calendar-bg-button: #f0f0f0;
+  --calendar-border: #ccc;
+  --calendar-text: #333;
+  --calendar-shadow: rgba(0, 0, 0, 0.1);
+  --calendar-font: system-ui, -apple-system, sans-serif;
+}
+
+// === LAYOUT ===
+.calendar-density-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  // align-items: center;
+  min-height: 100%;
+  height: auto;
+  overflow: auto;
+}
+
+.calendar-density-header {
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  font-family: var(--calendar-font);
+  font-weight: 550;
+  background-color: var(--calendar-bg-light);
+}
+
+.calendar-density-body {
+  // Réservé pour styles futurs
+}
+
+// === NAVIGATION ===
+.calendar-density-nav-button {
+  width: 30px;
+  background-color: var(--calendar-bg-button);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.2s ease;
+  user-select: none;
+  border: 1px solid transparent;
+  
+  &:hover {
+    background-color: var(--calendar-bg-hover);
+  }
+  
+  &:active {
+    transform: translateY(1px);
+  }
+}
+
+// === LABELS ===
+.calendar-density-days-labels {
+  text-anchor: end;
+  font-size: 11px;
+  font-family: var(--calendar-font);
+  fill: var(--calendar-text);
+  
+  text {
+    font-size: inherit;
+    font-family: inherit;
+  }
+}
+
+// === CELLULES ===
+.calendar-density-cell {
+  cursor: default;
+  transition: stroke 0.15s ease, stroke-width 0.15s ease;
+  
+  &:hover {
+    stroke: #000;
+    stroke-width: 2;
+    cursor: pointer;
+  }
+}
+
+// === TOOLTIP ===
+.tooltip {
+  position: absolute;
+  z-index: 10;
+  visibility: hidden;
+  background: white;
+  border: 1px solid var(--calendar-border);
+  padding: 8px 12px;
+  border-radius: 4px;
+  box-shadow: 0 2px 8px var(--calendar-shadow);
+  font-family: var(--calendar-font);
+  font-size: 12px;
+  pointer-events: none;
+}
+
+// === MODAL ===
+.modal {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  visibility: hidden;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+.modal-content {
+  position: relative;
+  background: white;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 4px 20px var(--calendar-shadow);
+  width: min(80vw, 800px);
+  max-height: 80vh;
+  overflow: auto;
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--calendar-border);
+}
+
