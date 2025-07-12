@@ -1,20 +1,25 @@
 
 @use 'd3CalendarDensity/CalendarDensity.scss';
+@use 'Gantt/Gantt.scss';
+@use 'StackedHorizontalBar/StackedHorizontalBar.scss';
 
 $primary-color: #000000;
 $font-size: 16px;
 
-body {
+body
+{
   font-family: Arial, sans-serif;
   font-size: $font-size;
   color: $primary-color;
 }
 
-.chart-container {
+.chart-container
+{
   border: 2px solid $primary-color;
   border-radius: 8px;
   
-  h2 {
+  h2
+  {
     margin-top: 0;
   }
 }

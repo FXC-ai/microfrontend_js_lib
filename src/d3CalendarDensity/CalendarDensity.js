@@ -20,14 +20,26 @@ function generateYearCalendarData(year, existingData)
     // Boucle sur tous les jours de l'année
     const currentDate = new Date(startDate);
     
+    let datasMap = new Map();
+    existingData.map(item =>
+    {
+        const dateKey = `${item.date.getUTCFullYear()}-${item.date.getUTCMonth()}-${item.date.getUTCDate()}`;
+        if (datasMap.has(dateKey))
+        {
+            // Si l'item existe déjà, on fusionne les données
+            console.error("generateYearCalendarData() - Fusion des données pour la date", dateKey);
+            return;
+        }
+        datasMap.set(dateKey, item);
+    }
+    );
+
+
     while (currentDate <= endDate)
     {
+        const dateKey = `${currentDate.getUTCFullYear()}-${currentDate.getUTCMonth()}-${currentDate.getUTCDate()}`;
 
-        let existingItem = existingData.find((item) => {
-            return item.date.getUTCFullYear() === currentDate.getUTCFullYear() &&
-                   item.date.getUTCMonth() === currentDate.getUTCMonth() &&
-                   item.date.getUTCDate() === currentDate.getUTCDate();
-        });
+        let existingItem = datasMap.get(dateKey);
 
         // Création de l'objet pour le jour courant
 
@@ -35,8 +47,6 @@ function generateYearCalendarData(year, existingData)
         {
             // Si l'item existe déjà, on l'utilise
             data.push(existingItem);
-            currentDate.setDate(currentDate.getDate() + 1);
-            continue;
         }
         else
         {
@@ -51,7 +61,6 @@ function generateYearCalendarData(year, existingData)
         // Passage au jour suivant
         currentDate.setDate(currentDate.getDate() + 1);
     }
-    
     return data;
 }
 
@@ -127,8 +136,6 @@ export class CalendarDensity extends UIElement
         try {
             const url = `/${this.prefixeAPI}?year=${this.year}`;
 
-            console.log("obtain_datas_by_year() - url", url, this.prefixeAPI);
-
             const response = await fetch(url);
             
             if (!response.ok) {
@@ -176,15 +183,28 @@ export class CalendarDensity extends UIElement
         this.parent.innerHTML = "";
     }
 
-    _transformRawData(rawData) {
+    _transformRawData(rawData)
+    {
+
         if (!Array.isArray(rawData)) return [];
-        
-        return rawData.map(item => ({
-            date: new Date(item.date),
-            description: item.description || '',
-            value: item.value || 0,
-            label: item.label || ''
-        }));
+    
+        return rawData.map(item => {
+            let date;
+            if (typeof item.date === 'string' && item.date.match(/^\d{4}-\d{2}-\d{2}$/)) {
+                // Format YYYY-MM-DD : on force l'interprétation locale
+                const [year, month, day] = item.date.split('-');
+                date = new Date(year, month - 1, day); // month est 0-indexé
+            } else {
+                date = new Date(item.date);
+            }
+            
+            return {
+                date,
+                description: item.description || '',
+                value: item.value || 0,
+                label: item.label || ''
+            };
+        });
     }
 
     _cleanup() {

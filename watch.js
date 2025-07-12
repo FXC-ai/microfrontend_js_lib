@@ -8,10 +8,10 @@ console.log('📦 Build initial...');
 execSync('node build.js', { stdio: 'inherit' });
 
 // Démarrer le serveur
-console.log('🌐 Démarrage du serveur...');
-const server = spawn('npx', ['http-server', '.', '-p', '8080'], { 
-  stdio: 'inherit' 
-});
+// console.log('🌐 Démarrage du serveur...');
+// const server = spawn('npx', ['http-server', '.', '-p', '8080'], { 
+//   stdio: 'inherit' 
+// });
 
 // Surveiller les fichiers
 console.log('👀 Surveillance des fichiers...');

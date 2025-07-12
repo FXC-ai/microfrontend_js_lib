@@ -1,0 +1,59 @@
+.gantt-grid-lines {
+    line {
+      stroke: #ededed;
+      stroke-width: 1px;
+    }
+  }
+
+.gantt-bars {
+    opacity: 0.60;
+}
+
+.gantt-tooltip {
+    &__header {
+      margin-bottom: 12px;
+      border-bottom: 2px solid #666;
+      
+      h3 {
+        margin: 0 0 8px 0;
+        font-size: 16px;
+      }
+    }
+    
+    &__content {
+      display: grid;
+      gap: 8px;
+      font-size: 14px;
+      
+      div {
+        span {
+          &:first-child {
+            color: #666;
+            font-weight: 500;
+          }
+          
+          &:last-child {
+            margin-left: 4px;
+            color: #333;
+          }
+        }
+      }
+    }
+    
+    &__description {
+      margin-top: 4px;
+      padding-top: 8px;
+      border-top: 1px solid #eee;
+      
+      span {
+        color: #666;
+        font-weight: 500;
+      }
+      
+      p {
+        margin: 4px 0 0 0;
+        color: #333;
+        line-height: 1.4;
+      }
+    }
+  }
