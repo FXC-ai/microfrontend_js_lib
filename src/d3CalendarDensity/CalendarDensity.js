@@ -34,7 +34,6 @@ function generateYearCalendarData(year, existingData)
     }
     );
 
-
     while (currentDate <= endDate)
     {
         const dateKey = `${currentDate.getUTCFullYear()}-${currentDate.getUTCMonth()}-${currentDate.getUTCDate()}`;
@@ -67,20 +66,50 @@ function generateYearCalendarData(year, existingData)
 export class CalendarDensity extends UIElement
 {
     // Configuration par défaut
-    static DEFAULT_CONFIG = {
+    static DEFAULT_CONFIG =
+    {
         cellSize: 22,
         marginTop: 15,
-        colors: d3.scaleSequential(d3.interpolateRgbBasis(["#f7f7f7", "#009640"])).domain([0, 1])
+        colors: d3.scaleSequential(d3.interpolateRgbBasis(["#f23045", "#009640"])).domain([0, 1])
     };
 
-    static LABELS = {
-        days: ["Dim", "Lun", "Mar", "Mer", "Jeu", "Ven", "Sam"],
-        months: ["Jan", "Fev", "Mar", "Avr", "Mai", "Juin", "Juil", "Aoû", "Sep", "Oct", "Nov", "Déc"]
+    static LABELS =
+    {
+        days   : ["Dim", "Lun", "Mar", "Mer", "Jeu", "Ve.", "Sa."],
+        months : ["Jan", "Fev", "Mar", "Avr", "Mai", "Juin", "Juil", "Aoû", "Sep", "Oct", "Nov", "Déc"]
     };
 
-    constructor(year, prefixeAPI, parent) {
+    constructor
+    (
+        prefixeAPI,
+        parent,
+        year
+    )
+    {
         super(prefixeAPI, parent);
-        this.year = year;
+
+        if (year && typeof year === 'number' && year > 0)
+        {
+            this.year = year;
+        }
+        else
+        {
+            const baseUrl = new URL(window.location.href).origin + "/";
+            const url = new URL(this.prefixeAPI, baseUrl);
+            
+            const year_in_url = url.searchParams.get("year");
+
+            if (year_in_url && !isNaN(year_in_url))
+            {
+                this.year = parseInt(year_in_url, 10);
+            }
+            else
+            {
+                this.year = new Date().getFullYear();
+            }
+
+        }
+
         this.datas = [];
         this.isLoading = false;
         
@@ -89,96 +118,116 @@ export class CalendarDensity extends UIElement
         this.modal = null;
         
         // Configuration calculée
-        this.config = {
+        this.config =
+        {
             ...CalendarDensity.DEFAULT_CONFIG,
             yearHeight: CalendarDensity.DEFAULT_CONFIG.cellSize * 7 + 25,
             svgWidth: (CalendarDensity.DEFAULT_CONFIG.cellSize + 1) * 54 + 60
         };
     }
 
-    set_datas(datas) {
+    set_datas(datas)
+    {
         this.datas = Array.isArray(datas) ? datas : [];
     }
 
-    set_year(year) {
-        if (typeof year === 'number' && year > 0) {
+    set_year(year)
+    {
+        if (typeof year === 'number' && year > 0)
+        {
             this.year = year;
         }
     }
 
-    async obtain_datas() {
+    async obtain_datas()
+    {
         if (this.isLoading) return; // Éviter les appels multiples
         
         this.isLoading = true;
-        try {
+
+        try
+        {
             const url = `/${this.prefixeAPI}`;
+
+
             const response = await fetch(url);
             
-            if (!response.ok) {
+            if (!response.ok)
+            {
                 throw new Error(`Erreur HTTP: ${response.status}`);
             }
             
             const rawData = await response.json();
+
             this.datas = this._transformRawData(rawData);
-            
-        } catch (error) {
+        }
+        catch (error)
+        {
             console.error('Erreur lors du chargement des données:', error);
             this.datas = []; // Assurer un état cohérent
-        } finally {
+        }
+        finally
+        {
             this.isLoading = false;
         }
     }
 
-    async obtain_datas_by_year() {
-        if (this.isLoading) return;
+
+    async _changeYear(direction)
+    {
+        // Protection contre les appels multiples
+        if (this.isLoading)
+        {
+            return;
+        }
+    
+        const previousYear = this.year;
         
-        this.isLoading = true;
-        try {
-            const url = `/${this.prefixeAPI}?year=${this.year}`;
-
-            const response = await fetch(url);
+        try
+        {
+            // Mise à jour de l'année
+            this.year += direction;
             
-            if (!response.ok) {
-                throw new Error(`Erreur HTTP: ${response.status}`);
-            }
+            // Mise à jour de l'URL API
+            this._updateApiUrl();
             
-            const rawData = await response.json();
-            this.datas = this._transformRawData(rawData);
+            // Chargement des nouvelles données
+            await this.obtain_datas();
             
-        } catch (error) {
-            console.error('Erreur lors du chargement des données:', error);
-            this.datas = [];
-        } finally {
-            this.isLoading = false;
+            // Rendu avec les nouvelles données
+            this.render();
+            
+        }
+        catch (error)
+        {
+            // En cas d'erreur, on restaure l'année précédente
+            this.year = previousYear;
+            this._updateApiUrl();
+            
+            const yearDirection = direction > 0 ? 'suivante' : 'précédente';
+            console.error(`Erreur lors de la récupération des données pour l'année ${yearDirection}:`, error);
+            
+            // Optionnel : afficher une notification à l'utilisateur
+            // this._showErrorNotification(`Impossible de charger l'année ${this.year + direction}`);
         }
     }
 
-    next_year() {
-        this.year++;
-        this.obtain_datas_by_year(this.year)
-            .then(() => {
-                this.render();
-            })
-            .catch(error => {
-                console.error('Erreur lors de la récupération des données pour l\'année suivante:', error);
-            });
-
-        this.render();
+    /**
+     * Met à jour l'URL de l'API avec l'année courante
+     * Préserve tous les autres paramètres existants
+     */
+    _updateApiUrl()
+    {
+        const baseUrl = new URL(window.location.href).origin + "/";
+        const url = new URL(this.prefixeAPI, baseUrl);
+        
+        url.searchParams.set("year", this.year);
+        
+        this.prefixeAPI = url.pathname.replace(/^\//, '') + url.search;
     }
 
-    previous_year() {
-        this.year--;
-        this.obtain_datas_by_year(this.year)
-            .then(() => {
-                this.render();
-            })
-            .catch(error => {
-                console.error('Erreur lors de la récupération des données pour l\'année précédente:', error);
-            });
-        this.render();
-    }
-
-    destroy() {
+    destroy()
+    {
         this._cleanup();
         this.parent.innerHTML = "";
     }
@@ -423,11 +472,11 @@ export class CalendarDensity extends UIElement
 
     _setupNavigation(leftButton, rightButton) {
         leftButton.on("click", () => {
-            this.previous_year();
+            this._changeYear(-1);
         });
 
         rightButton.on("click", () => {
-            this.next_year();
+            this._changeYear(1);
         });
     }
 

@@ -56,8 +56,6 @@ export class StackedHorizontalBar extends UIElement
             barHeight: 30,          // Hauteur de chaque barre
             axisXHeight: 30         // Hauteur de l'axe X
         };
-
-        console.log("StackedHorizontalBar constructor called");
     }
 
     /**
@@ -74,7 +72,8 @@ export class StackedHorizontalBar extends UIElement
             return;
         }
         this.isLoading = true;
-        try {
+        try
+        {
             const url = `/${this.prefixeAPI}`;
             const response = await fetch(url);
             if (!response.ok) {
@@ -82,10 +81,14 @@ export class StackedHorizontalBar extends UIElement
             }
             const rawData = await response.json();
             this.datas = this._transformRawData(rawData);
-        } catch (error) {
+        }
+        catch (error)
+        {
             console.error('Erreur lors du chargement des données:', error);
             this.datas = []; // Assurer un état cohérent
-        } finally {
+        }
+        finally
+        {
             this.isLoading = false;
         }
     }
@@ -100,7 +103,8 @@ export class StackedHorizontalBar extends UIElement
      *   - color {string} : Couleur hexadécimale
      *   - description {string} : Description optionnelle
      */
-    set_datas(datas) {
+    set_datas(datas)
+    {
         this.datas = datas;
     }
 
@@ -181,12 +185,14 @@ export class StackedHorizontalBar extends UIElement
      * @param {d3.InternMap} totalsByLabel - Map des totaux par label pour calculer les pourcentages
      * @returns {void}
      */
-    _setupInteractions(rectangles, totalsByLabel) {
+    _setupInteractions(rectangles, totalsByLabel)
+    {
         let tooltip = createTooltip();
         let tooltipVisible = false;
     
         rectangles.style("cursor", "pointer")
-                .on("mouseover", function(event, d) {
+                .on("mouseover", function(event, d)
+                {
                     // Effet de survol : réduction de l'opacité
                     d3.select(this).attr("opacity", 0.5);
                 })
@@ -208,8 +214,10 @@ export class StackedHorizontalBar extends UIElement
                     let categoryColor = "";
     
                     // Recherche des données correspondantes
-                    d.data[1].forEach((item, key) => {
-                        if (d.key === key) {
+                    d.data[1].forEach((item, key) =>
+                    {
+                        if (d.key === key)
+                        {
                             value = item.value;
                             valuePercentage = item.value / totalsByLabel.get(item.label) || 0;
                             categoryColor = item.color;
@@ -374,16 +382,6 @@ export class StackedHorizontalBar extends UIElement
 
         let containerWidth = this.parent.clientWidth;
 
-        // console.log("Container width: ", containerWidth);
-
-        // if (containerWidth == 0)
-        // {
-        //     // Si le parent n'a pas de largeur définie, utiliser une largeur par défaut
-        //     console.warn("Le conteneur parent n'a pas de largeur définie, utilisation de 800px par défaut.");
-        //     containerWidth = 800;
-        // }
-
-
         let containerHeight;
         if (this.parent.clientHeight == 0)
         {
@@ -417,7 +415,8 @@ export class StackedHorizontalBar extends UIElement
             console.error("Données brutes invalides, attendu un tableau.");
             return [];
         }
-  
+        
+        console.log("rawdata SHB ", rawData);
         return rawData.map
         (
           item => 

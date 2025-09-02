@@ -1,0 +1,106 @@
+.dataframe-table
+{
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    font-family: "Segoe UI", sans-serif;
+    font-size: 14px;
+    color: #333;
+    border-radius: 8px;
+    overflow: hidden;
+  
+    th
+    {
+      border: 1px solid #d1d9e0;
+      padding: 10px 14px;
+      text-align: center;
+      position: sticky;
+      top: 0;
+      background-color: #eef3f9;
+      z-index: 10;
+      font-weight: 600;
+      color: #0a2b44;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
+      backdrop-filter: blur(2px);
+
+    }
+  
+    td
+    {
+      white-space: normal;
+      word-break: break-word;
+      border: 1px solid #e3e7ec;
+      padding: 10px 14px;
+      background-color: #ffffff;
+      vertical-align: top;
+      min-width: 90px;
+      max-width: 550px;
+      transition: background-color 0.2s ease;
+    }
+
+    tr:hover td
+    {
+        background-color: #e6f0fa;
+        cursor: pointer;
+    }
+  }
+
+.dataframe-tooltip
+{
+    position: fixed;
+    inset: 0;
+    z-index: 1000;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+}
+
+.dataframe-tooltip-content
+{
+    background: rgb(255, 255, 255);
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 20px var(--calendar-shadow);
+    width: 80%;
+    max-height: 80vh;
+    overflow: auto;
+}
+
+.table-dataframe-tooltip-content
+{
+
+    width: 100%;
+    border-collapse: collapse;
+    font-family: sans-serif;
+    font-size: 0.9rem;
+  
+    th {
+      text-align: left;
+      background-color: #f5f5f5;
+      color: #333;
+      padding: 0.5rem;
+      border-bottom: 2px solid #ddd;
+      font-weight: 600;
+      overflow-y: scroll;
+    }
+  
+    td {
+        padding: 0.75rem; /* un peu plus d’espace intérieur */
+        border-bottom: 1px solid #eee;
+        color: #333;
+        vertical-align: top;
+        word-break: break-word;
+        min-width: 120px;
+        font-size: 1rem; /* taille de police augmentée */
+        line-height: 1.6; /* interligne augmenté */
+    }
+  
+    tr:last-child td {
+      border-bottom: none;
+    }
+
+}
+  
+  

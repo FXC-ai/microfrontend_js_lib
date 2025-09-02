@@ -78,23 +78,31 @@ const distGanttDir = 'dist/Gantt';
 
 fs.mkdirSync(distGanttDir, { recursive: true });
 
-if (fs.existsSync(srcGanttDir)) {
+if (fs.existsSync(srcGanttDir))
+{
   const files = fs.readdirSync(srcGanttDir).filter(file => file.endsWith('.js'));
-  for (const file of files) {
+
+  // runCommand('npx esbuild src/Gantt/Gantt.js --bundle --outfile=dist/Gantt/Gantt.js --format=iife');
+  // runCommand('npx tsc src/Gantt/Gantt.js --allowJs --outDir dist/Gantt --target es2020 --module es2020');
+
+  for (const file of files)
+  {
     const srcFile = path.join(srcGanttDir, file);
     const destFile = path.join(distGanttDir, file);
     fs.copyFileSync(srcFile, destFile);
   }
-} else {
+}
+else
+{
   console.warn(`⚠️ Dossier source introuvable : ${srcGanttDir}`);
 }
 
 //
 // 5. Copier les fichiers du Multiline
 //
-{
+
 const srcMultilineDir = 'src/Multiline';
-const distMultilineDir = 'dist/Gantt';
+const distMultilineDir = 'dist/Multiline';
 
 fs.mkdirSync(distMultilineDir, { recursive: true });
 
@@ -108,16 +116,90 @@ if (fs.existsSync(srcMultilineDir)) {
 } else {
   console.warn(`⚠️ Dossier source introuvable : ${srcGanttDir}`);
 }
+
+// 6. Copier les fichiers du Pie
+const srcPieDir = 'src/Pie';
+const distPieDir = 'dist/Pie';
+
+fs.mkdirSync(distPieDir, { recursive: true });
+if (fs.existsSync(srcPieDir))
+{
+  const files = fs.readdirSync(srcPieDir).filter(file => file.endsWith('.js'));
+  for (const file of files) {
+    const srcFile = path.join(srcPieDir, file);
+    const destFile = path.join(distPieDir, file);
+    fs.copyFileSync(srcFile, destFile);
+  }
+} 
+else
+{
+  console.warn(`⚠️ Dossier source introuvable : ${srcPieDir}`);
+}
+
+// 7. Copier les fichiers du HorizontalBar
+
+const srcHbDir = 'src/HorizontalBar';
+const distHbDir = 'dist/HorizontalBar';
+
+fs.mkdirSync(distHbDir, { recursive: true });
+if (fs.existsSync(srcHbDir))
+{
+  const files = fs.readdirSync(srcHbDir).filter(file => file.endsWith('.js'));
+  for (const file of files) {
+    const srcFile = path.join(srcHbDir, file);
+    const destFile = path.join(distHbDir, file);
+    fs.copyFileSync(srcFile, destFile);
+  }
+} 
+else
+{
+  console.warn(`⚠️ Dossier source introuvable : ${srcHbDir}`);
+}
+
+// 8. Transpilation de ts en js depuis le dossier src vers le dossier dist pour CalendarMonth
+
+const srcCalendarMonthDir = 'src/CalendarMonth';
+const distCalendarMonthDir = 'dist/CalendarMonth';
+
+fs.mkdirSync(distCalendarMonthDir, { recursive: true });
+if (fs.existsSync(srcCalendarMonthDir))
+{
+  runCommand('npx tsc src/CalendarMonth/CalendarMonth.ts --outDir dist/CalendarMonth --target es2020 --module es2020');
+} 
+else
+{
+  console.warn(`⚠️ Dossier source introuvable : ${srcCalendarMonthDir}`);
+}
+
+// 9. Transpilation de ts vers js depuis le dossier src vers le dossier dist pour Dataframe
+
+const srcDataframeDir = 'src/Dataframe';
+const distDataframeDir = 'dist/Dataframe';
+
+fs.mkdirSync(distDataframeDir, { recursive: true });
+if (fs.existsSync(srcDataframeDir))
+{
+  runCommand('npx tsc src/Dataframe/Dataframe.ts --outDir dist/Dataframe --target es2020 --module es2020');
+} 
+else
+{
+  console.warn(`⚠️ Dossier source introuvable : ${srcDataframeDir}`);
 }
 
 //
 // 3. Compiler SCSS vers CSS
 //
-runCommand('npx sass src/main.scss dist/main.css');
+runCommand('npx sass src/Dataframe/Dataframe.scss dist/Dataframe/Dataframe.css');
+
+runCommand('npx sass src/HorizontalBar/HorizontalBar.scss dist/HorizontalBar/HorizontalBar.css');
+runCommand('npx sass src/StackedHorizontalBar/StackedHorizontalBar.scss dist/StackedHorizontalBar/StackedHorizontalBar.css');
+runCommand('npx sass src/CalendarMonth/calendar_month.scss dist/CalendarMonth/calendar_month.css');
+runCommand('npx sass src/d3CalendarDensity/CalendarDensity.scss dist/d3CalendarDensity/CalendarDensity.css');
+runCommand('npx sass src/pie/pie.scss dist/pie/pie.css');
 
 //
 // 4. Bundler TypeScript principal
 //
-runCommand('npx esbuild src/main.ts --bundle --outfile=dist/main.js --format=iife');
+runCommand('npx esbuild src/main.ts --bundle --outfile=dist/main.js --format=esm');
 
 console.log('\n🎉 Build terminé avec succès !');

@@ -2,6 +2,10 @@
 @use 'd3CalendarDensity/CalendarDensity.scss';
 @use 'Gantt/Gantt.scss';
 @use 'StackedHorizontalBar/StackedHorizontalBar.scss';
+@use 'Pie/Pie.scss';
+@use 'HorizontalBar/HorizontalBar.scss';
+@use 'CalendarMonth/calendar_month.scss';
+@use 'Dataframe/Dataframe.scss';
 
 $primary-color: #000000;
 $font-size: 16px;

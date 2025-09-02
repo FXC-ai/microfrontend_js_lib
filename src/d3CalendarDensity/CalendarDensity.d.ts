@@ -13,7 +13,8 @@ export class CalendarDensity extends UIElement
     datas: Array<DataCalendarDensity>;
     year: number;
 
-    constructor (year : number, prefixeAPI : string, parent : HTMLElement)
+    constructor (prefixeAPI : string, parent : HTMLElement, year : number | undefined);
+    
     obtain_datas(): Promise<void>;
     render(): void;
     destroy(): void;

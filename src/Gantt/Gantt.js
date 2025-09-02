@@ -37,7 +37,7 @@
  */
 
 import * as d3 from 'd3';
-import { timeFormatDefaultLocale } from "d3-time-format";
+import { timeFormatDefaultLocale } from 'd3-time-format';
 import { UIElement } from '../UIElement.js';
 
 /**
@@ -226,7 +226,8 @@ export class Gantt extends UIElement {
       try {
           const url = `/${this.prefixeAPI}`;
           const response = await fetch(url);
-          if (!response.ok) {
+          if (!response.ok)
+          {
               throw new Error(`Erreur HTTP: ${response.status}`);
           }
           const rawData = await response.json();
@@ -252,10 +253,13 @@ export class Gantt extends UIElement {
    * @returns {number} containerWidth - Largeur du conteneur
    * @returns {number} containerHeight - Hauteur du conteneur
    */
-  _calculateDimensions() {
+  _calculateDimensions()
+  {
       const labelGroups = d3.group(this.datas, (d) => d["label"]);
+
       const totalSvgHeight = labelGroups.size * this.DEFAULT_CONFIG.ROW_GAP;
       const containerWidth = this.parent.clientWidth;
+
 
       let containerHeight;
       if (this.parent.clientHeight == 0)
@@ -265,8 +269,8 @@ export class Gantt extends UIElement {
       else
       {
           containerHeight = this.parent.clientHeight;
+          console.log("gantt containerHieht", containerHeight);
       }
-      
       
       return { labelGroups, totalSvgHeight, containerWidth, containerHeight };
   }
@@ -282,8 +286,11 @@ export class Gantt extends UIElement {
    * @param {number} containerHeight - Hauteur du conteneur
    * @returns {boolean} True si les dimensions sont suffisantes
    */
-  _checkMinimumDimensions(containerWidth, containerHeight) {
-      if (containerWidth < this.DEFAULT_CONFIG.MIN_WIDTH || containerHeight < this.DEFAULT_CONFIG.MIN_HEIGHT)
+  _checkMinimumDimensions(containerWidth, containerHeight)
+  {
+
+      // || containerHeight < this.DEFAULT_CONFIG.MIN_HEIGHT
+      if (containerWidth < this.DEFAULT_CONFIG.MIN_WIDTH )
       {
           console.warn("Gantt chart dimensions are below minimum requirements.");
           return false;
